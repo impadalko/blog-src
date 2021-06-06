@@ -4,7 +4,12 @@
   "main": "index.js",
   "repository": "git@github.com:impadalko/blog-src.git",
   "license": "CC-BY-4.0",
+  "scripts": {
+    "build": "rm -rf build && printing-press -t templates -c content -o build -p public && prettier build --write"
+  },
   "dependencies": {
+    "prettier": "^2.3.1",
     "printing-press": "^0.3.0"
-  }
+  },
+  "devDependencies": {}
 }
