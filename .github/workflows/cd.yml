@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14.x
+      - name: Install dependencies
+        run: yarn install
+      - name: Build website
+        run: yarn build
+      - name: Checkout hosting repository
+        uses: actions/checkout@v2
+        with:
+          repository: impadalko/impadalko.github.io
+          token: ${{ secrets.ACCESS_TOKEN }}
+          path: host
+      - name: Clean hosting repository
+        run: ls | grep -v -E "README.md|CNAME" | xargs rm -r
+        working-directory: host
+      - name: Copy built website
+        run: cp -r build/ host/
+      - name: Commit and push
+        run: |
+          git config user.name "Ivan Padalko"
+          git config user.email "dev@impadalko.com"
+          git commit -am "Automated Deploy $(date '+%Y-%m-%d')"
+          git push
+        working-directory: host
+
