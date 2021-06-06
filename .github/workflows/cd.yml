@@ -27,15 +27,16 @@ jobs:
           token: ${{ secrets.ACCESS_TOKEN }}
           path: host
       - name: Clean hosting repository
-        run: ls | grep -v -E "README.md|CNAME" | xargs rm -r
+        run: ls | grep -v -E "README.md|CNAME" | xargs rm -rf
         working-directory: host
       - name: Copy built website
-        run: cp -r build/ host/
+        run: cp -r build/* host/
       - name: Commit and push
         run: |
           git config user.name "Ivan Padalko"
           git config user.email "dev@impadalko.com"
-          git commit -am "Automated Deploy $(date '+%Y-%m-%d')"
+          git add .
+          git commit -m "Automated Deploy $(date '+%Y-%m-%d')"
           git push
         working-directory: host
 
